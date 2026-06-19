@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Visibility Checker — Smallware Co</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222222;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --text: #e8e8e8;
+    --text-muted: #888;
+    --text-dim: #555;
+    --accent: #d4a853;
+    --accent-dim: rgba(212,168,83,0.12);
+    --green: #4a9c6d;
+    --green-bg: rgba(74,156,109,0.12);
+    --green-text: #6dba8a;
+    --amber: #b8862a;
+    --amber-bg: rgba(184,134,42,0.12);
+    --amber-text: #d4a853;
+    --red: #9c4a4a;
+    --red-bg: rgba(156,74,74,0.12);
+    --red-text: #c47070;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo { font-family: var(--mono); font-size: 13px; color: var(--text-muted); letter-spacing: 0.02em; }
+  .logo span { color: var(--accent); }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(212,168,83,0.25);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .main { max-width: 780px; margin: 0 auto; padding: 3rem 2rem; }
+
+  .hero { margin-bottom: 2.5rem; }
+
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em { font-style: normal; color: var(--accent); }
+
+  .hero p { font-size: 14px; color: var(--text-muted); line-height: 1.7; max-width: 560px; }
+
+  .form-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row { margin-bottom: 1rem; }
+  .form-row:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  label .opt { font-size: 11px; color: var(--text-dim); text-transform: none; letter-spacing: 0; font-family: var(--sans); }
+
+  input[type="url"],
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--sans);
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="url"]:focus,
+  input[type="text"]:focus,
+  input[type="password"]:focus { border-color: var(--border-hover); }
+
+  input::placeholder { color: var(--text-dim); }
+
+  /* Provider selector */
+  .provider-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .provider-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 10px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .provider-btn:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .provider-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .provider-btn .provider-name { display: block; font-size: 13px; margin-bottom: 2px; }
+  .provider-btn .provider-model { display: block; font-size: 10px; color: var(--text-dim); letter-spacing: 0.03em; }
+  .provider-btn.active .provider-model { color: var(--amber-text); opacity: 0.7; }
+
+  .key-row { display: flex; gap: 8px; align-items: flex-end; }
+  .key-row input { flex: 1; font-family: var(--mono); font-size: 13px; }
+
+  .key-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .key-toggle:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+  .run-btn {
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    color: #0f0f0f;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--mono);
+    padding: 12px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
+  }
+
+  .run-btn:hover { opacity: 0.88; }
+  .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .status {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 1rem 0;
+    display: none;
+  }
+
+  .status .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .error-msg {
+    background: var(--red-bg);
+    border: 1px solid rgba(156,74,74,0.3);
+    border-radius: var(--radius);
+    color: var(--red-text);
+    font-size: 13px;
+    padding: 10px 14px;
+    margin-top: 1rem;
+    display: none;
+    font-family: var(--mono);
+  }
+
+  .results { display: none; margin-top: 1.5rem; }
+
+  .results-meta {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  .results-meta a { color: var(--accent); text-decoration: none; }
+
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  @media (max-width: 600px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .result-type {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .result-prompt {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    border-left: 2px solid var(--border);
+    padding-left: 10px;
+  }
+
+  .signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .signal-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .signal.strong { background: var(--green-bg); color: var(--green-text); }
+  .signal.strong .signal-dot { background: var(--green); }
+  .signal.weak { background: var(--amber-bg); color: var(--amber-text); }
+  .signal.weak .signal-dot { background: var(--amber); }
+  .signal.none { background: var(--red-bg); color: var(--red-text); }
+  .signal.none .signal-dot { background: var(--red); }
+
+  .signal-label { font-size: 11px; color: var(--text-dim); font-family: var(--mono); margin-bottom: 8px; }
+
+  .result-response {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .result-response::-webkit-scrollbar { width: 4px; }
+  .result-response::-webkit-scrollbar-track { background: transparent; }
+  .result-response::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    margin-top: 4rem;
+  }
+
+  .footer a { color: var(--text-muted); text-decoration: none; }
+  .footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">smallware<span>.</span>co</div>
+  <div class="badge">experiment</div>
+</header>
+
+<main class="main">
+  <div class="hero">
+    <h1>llm-<em>visibility</em>-checker</h1>
+    <p>Test whether LLMs can find and cite your content in their responses. Runs two independent tests — citation and knowledge — each scored with a confidence signal.</p>
+  </div>
+
+  <div class="form-section">
+    <div class="form-row">
+      <label for="inp-url">Content URL</label>
+      <input type="url" id="inp-url" placeholder="https://yoursite.com/your-post" autocomplete="off" />
+    </div>
+
+    <div class="form-row">
+      <label for="inp-keyword">Topic / keyword <span class="opt">(optional — sharpens the test prompt)</span></label>
+      <input type="text" id="inp-keyword" placeholder="e.g. local LLM setup, Playwright testing" autocomplete="off" />
+    </div>
+
+    <hr class="divider">
+
+    <div class="form-row">
+      <label>LLM provider</label>
+      <div class="provider-row">
+        <button class="provider-btn active" onclick="selectProvider('anthropic', this)">
+          <span class="provider-name">Claude</span>
+          <span class="provider-model">claude-sonnet-4-6</span>
+        </button>
+        <button class="provider-btn" onclick="selectProvider('openai', this)">
+          <span class="provider-name">ChatGPT</span>
+          <span class="provider-model">gpt-4o</span>
+        </button>
+        <button class="provider-btn" onclick="selectProvider('gemini', this)">
+          <span class="provider-name">Gemini</span>
+          <span class="provider-model">gemini-2.0-flash</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="inp-key">API key <span class="opt" id="key-hint">(Anthropic — session only, not stored)</span></label>
+      <div class="key-row">
+        <input type="password" id="inp-key" placeholder="sk-ant-..." autocomplete="off" />
+        <button class="key-toggle" onclick="toggleKey(event)">show</button>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:1.25rem;">
+      <button class="run-btn" id="run-btn" onclick="runCheck()">run visibility check</button>
+    </div>
+  </div>
+
+  <div class="status" id="status">
+    <span class="dot"></span> <span id="status-text">running both tests...</span>
+  </div>
+
+  <div class="error-msg" id="error-msg"></div>
+
+  <div class="results" id="results">
+    <div class="results-meta" id="results-meta"></div>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-type">Citation test</div>
+        <div class="result-prompt" id="ct-prompt"></div>
+        <div class="signal-label">Confidence signal</div>
+        <div class="signal none" id="ct-signal">
+          <span class="signal-dot"></span>
+          <span class="signal-text">No signal</span>
+        </div>
+        <div class="result-response" id="ct-response"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-type">Knowledge test</div>
+        <div class="result-prompt" id="kt-prompt"></div>
+        <div class="signal-label">Confidence signal</div>
+        <div class="signal none" id="kt-signal">
+          <span class="signal-dot"></span>
+          <span class="signal-text">No signal</span>
+        </div>
+        <div class="result-response" id="kt-response"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <a href="https://smallware-co.github.io" target="_blank">smallware.co</a> &mdash; built by <a href="https://engineeredai.net" target="_blank">engineeredai.net</a>
+</footer>
+
+<script>
+/**
+ * llm-visibility-checker
+ *
+ * Standalone BYOK tool. Three providers: Anthropic, OpenAI, Gemini.
+ * Session-only key — never stored.
+ * Two-prompt strategy: citation test + knowledge test.
+ * Three-tier confidence signal per test.
+ */
+
+let currentProvider = 'anthropic';
+
+const PROVIDERS = {
+  anthropic: {
+    label: 'Claude',
+    model: 'claude-sonnet-4-6',
+    placeholder: 'sk-ant-...',
+    hint: 'Anthropic — session only, not stored'
+  },
+  openai: {
+    label: 'ChatGPT',
+    model: 'gpt-4o',
+    placeholder: 'sk-...',
+    hint: 'OpenAI — session only, not stored'
+  },
+  gemini: {
+    label: 'Gemini',
+    model: 'gemini-2.0-flash',
+    placeholder: 'AIza...',
+    hint: 'Google AI Studio — session only, not stored'
+  }
+};
+
+function selectProvider(id, btn) {
+  currentProvider = id;
+  document.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const p = PROVIDERS[id];
+  document.getElementById('inp-key').value = '';
+  document.getElementById('inp-key').placeholder = p.placeholder;
+  document.getElementById('key-hint').textContent = p.hint;
+  document.getElementById('status-text').textContent = 'running both tests against ' + p.model + '...';
+}
+
+function toggleKey(e) {
+  const inp = document.getElementById('inp-key');
+  const btn = e.target;
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'hide'; }
+  else { inp.type = 'password'; btn.textContent = 'show'; }
+}
+
+function getDomain(url) {
+  try { return new URL(url).hostname.replace('www.', ''); }
+  catch(e) { return ''; }
+}
+
+function getPathWords(url) {
+  try {
+    return new URL(url).pathname
+      .split('/').filter(Boolean)
+      .flatMap(p => p.split('-'))
+      .filter(w => w.length > 3);
+  } catch(e) { return []; }
+}
+
+/**
+ * scoreSignal
+ * Strong = domain or URL cited directly in response.
+ * Weak = path words or site name referenced without direct citation.
+ * None = no traceable connection found.
+ */
+function scoreSignal(responseText, url) {
+  const lower = responseText.toLowerCase();
+  const domain = getDomain(url).toLowerCase();
+  const urlLower = url.toLowerCase();
+  const siteName = domain.split('.')[0];
+
+  if (lower.includes(urlLower) || lower.includes(domain)) return 'strong';
+
+  const pathWords = getPathWords(url);
+  const hasPathHit = pathWords.some(w => lower.includes(w.toLowerCase()));
+  const hasSiteHit = siteName.length > 3 && lower.includes(siteName.toLowerCase());
+
+  if (hasPathHit || hasSiteHit) return 'weak';
+  return 'none';
+}
+
+function applySignal(elId, level) {
+  const el = document.getElementById(elId);
+  const labels = { strong: 'Strong signal', weak: 'Weak signal', none: 'No signal' };
+  el.className = 'signal ' + level;
+  el.querySelector('.signal-text').textContent = labels[level];
+}
+
+/* — Provider API callers — */
+
+async function callAnthropic(apiKey, prompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+}
+
+async function callOpenAI(apiKey, prompt) {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + apiKey
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.choices[0].message.content;
+}
+
+async function callGemini(apiKey, prompt) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }]
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates[0].content.parts.map(p => p.text).join('');
+}
+
+async function callLLM(apiKey, prompt) {
+  if (currentProvider === 'anthropic') return callAnthropic(apiKey, prompt);
+  if (currentProvider === 'openai') return callOpenAI(apiKey, prompt);
+  if (currentProvider === 'gemini') return callGemini(apiKey, prompt);
+}
+
+async function runCheck() {
+  const url = document.getElementById('inp-url').value.trim();
+  const keyword = document.getElementById('inp-keyword').value.trim();
+  const apiKey = document.getElementById('inp-key').value.trim();
+
+  const errEl = document.getElementById('error-msg');
+  const statusEl = document.getElementById('status');
+  const resultsEl = document.getElementById('results');
+  const runBtn = document.getElementById('run-btn');
+
+  function showError(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
+
+  errEl.style.display = 'none';
+  resultsEl.style.display = 'none';
+
+  if (!url) { showError('Please enter a content URL.'); return; }
+  try { new URL(url); } catch(e) { showError('Please enter a valid URL (include https://).'); return; }
+  if (!apiKey) { showError('Please enter your API key for ' + PROVIDERS[currentProvider].label + '.'); return; }
+
+  const domain = getDomain(url);
+  const topic = keyword || domain;
+  const p = PROVIDERS[currentProvider];
+
+  const citationPrompt = `What are the best websites, blogs, or online resources to read about "${topic}"? Please be specific — include URLs or site names where you know them.`;
+  const knowledgePrompt = `I found this URL: ${url}${keyword ? ` — it covers the topic of "${keyword}"` : ''}. What do you know about this site or this content? Can you describe what it likely covers?`;
+
+  document.getElementById('ct-prompt').textContent = `"What are the best resources about ${topic}?"`;
+  document.getElementById('kt-prompt').textContent = `"What do you know about ${url}?"`;
+  document.getElementById('status-text').textContent = `running both tests against ${p.model}...`;
+
+  runBtn.disabled = true;
+  statusEl.style.display = 'block';
+
+  try {
+    const [ctResp, ktResp] = await Promise.all([
+      callLLM(apiKey, citationPrompt),
+      callLLM(apiKey, knowledgePrompt)
+    ]);
+
+    applySignal('ct-signal', scoreSignal(ctResp, url));
+    applySignal('kt-signal', scoreSignal(ktResp, url));
+
+    document.getElementById('ct-response').textContent = ctResp;
+    document.getElementById('kt-response').textContent = ktResp;
+
+    const now = new Date().toLocaleTimeString();
+    document.getElementById('results-meta').innerHTML =
+      `tested via ${p.label} (${p.model}): <a href="${url}" target="_blank">${url}</a> &mdash; ${now}`;
+
+    statusEl.style.display = 'none';
+    resultsEl.style.display = 'block';
+  } catch(e) {
+    statusEl.style.display = 'none';
+    showError('API error: ' + e.message);
+  }
+
+  runBtn.disabled = false;
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') runCheck();
+});
+</script>
+
+</body>
+</html>
