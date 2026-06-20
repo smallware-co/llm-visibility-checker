@@ -33,319 +33,106 @@
     --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.6;
-    min-height: 100vh;
-    padding: 0;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.6; min-height: 100vh; }
 
-  .header {
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
+  .header { border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
   .logo { font-family: var(--mono); font-size: 13px; color: var(--text-muted); letter-spacing: 0.02em; }
   .logo span { color: var(--accent); }
-
-  .badge {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--accent);
-    background: var(--accent-dim);
-    border: 1px solid rgba(212,168,83,0.25);
-    padding: 3px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.04em;
-  }
+  .badge { font-family: var(--mono); font-size: 11px; color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(212,168,83,0.25); padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; }
 
   .main { max-width: 780px; margin: 0 auto; padding: 3rem 2rem; }
 
   .hero { margin-bottom: 2.5rem; }
-
-  .hero h1 {
-    font-family: var(--mono);
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--text);
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-  }
-
+  .hero h1 { font-family: var(--mono); font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 8px; letter-spacing: -0.02em; }
   .hero h1 em { font-style: normal; color: var(--accent); }
-
   .hero p { font-size: 14px; color: var(--text-muted); line-height: 1.7; max-width: 560px; }
 
-  .form-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
+  .form-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; }
   .form-row { margin-bottom: 1rem; }
   .form-row:last-child { margin-bottom: 0; }
 
-  label {
-    display: block;
-    font-size: 12px;
-    font-family: var(--mono);
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
+  label { display: block; font-size: 12px; font-family: var(--mono); color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
   label .opt { font-size: 11px; color: var(--text-dim); text-transform: none; letter-spacing: 0; font-family: var(--sans); }
 
-  input[type="url"],
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 14px;
-    font-family: var(--sans);
-    padding: 10px 12px;
-    outline: none;
-    transition: border-color 0.15s;
+  input[type="url"], input[type="text"], input[type="password"] {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius);
+    color: var(--text); font-size: 14px; font-family: var(--sans); padding: 10px 12px; outline: none; transition: border-color 0.15s;
   }
-
-  input[type="url"]:focus,
-  input[type="text"]:focus,
-  input[type="password"]:focus { border-color: var(--border-hover); }
-
+  input[type="url"]:focus, input[type="text"]:focus, input[type="password"]:focus { border-color: var(--border-hover); }
   input::placeholder { color: var(--text-dim); }
 
-  /* Provider selector */
-  .provider-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 1rem;
-  }
-
+  .provider-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
   @media (max-width: 560px) { .provider-row { grid-template-columns: repeat(2, 1fr); } }
 
-  .provider-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 10px 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-    letter-spacing: 0.02em;
-  }
-
+  .provider-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-muted); font-family: var(--mono); font-size: 12px; padding: 10px 8px; cursor: pointer; text-align: center; transition: border-color 0.15s, color 0.15s, background 0.15s; letter-spacing: 0.02em; }
   .provider-btn:hover { border-color: var(--border-hover); color: var(--text); }
-
-  .provider-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-
+  .provider-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
   .provider-btn .provider-name { display: block; font-size: 13px; margin-bottom: 2px; }
   .provider-btn .provider-model { display: block; font-size: 10px; color: var(--text-dim); letter-spacing: 0.03em; }
   .provider-btn.active .provider-model { color: var(--amber-text); opacity: 0.7; }
 
-  /* Z.AI model select */
-  .zai-model-row {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
+  .zai-model-row { display: none; align-items: center; gap: 10px; margin-bottom: 1rem; }
   .zai-model-row.visible { display: flex; }
   .zai-model-row label { margin-bottom: 0; white-space: nowrap; }
-  select {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 8px 10px;
-    outline: none;
-    cursor: pointer;
-  }
+  select { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--mono); font-size: 12px; padding: 8px 10px; outline: none; cursor: pointer; }
   select:focus { border-color: var(--border-hover); }
   select option { background: #222; }
 
   .key-row { display: flex; gap: 8px; align-items: flex-end; }
   .key-row input { flex: 1; font-family: var(--mono); font-size: 13px; }
-
-  .key-toggle {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-size: 12px;
-    padding: 10px 12px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: border-color 0.15s, color 0.15s;
-  }
-
+  .key-toggle { background: none; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-muted); font-size: 12px; padding: 10px 12px; cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
   .key-toggle:hover { border-color: var(--border-hover); color: var(--text); }
 
   .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
 
-  .run-btn {
-    width: 100%;
-    background: var(--accent);
-    border: none;
-    border-radius: var(--radius);
-    color: #0f0f0f;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: var(--mono);
-    padding: 12px;
-    cursor: pointer;
-    letter-spacing: 0.02em;
-    transition: opacity 0.15s;
-  }
-
+  .run-btn { width: 100%; background: var(--accent); border: none; border-radius: var(--radius); color: #0f0f0f; font-size: 14px; font-weight: 600; font-family: var(--mono); padding: 12px; cursor: pointer; letter-spacing: 0.02em; transition: opacity 0.15s; }
   .run-btn:hover { opacity: 0.88; }
   .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .status {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text-muted);
-    text-align: center;
-    padding: 1rem 0;
-    display: none;
-  }
-
-  .status .dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    margin-right: 8px;
-    animation: pulse 1s infinite;
-  }
-
+  .status { font-family: var(--mono); font-size: 13px; color: var(--text-muted); text-align: center; padding: 1rem 0; display: none; }
+  .status .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: 8px; animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  .error-msg {
-    background: var(--red-bg);
-    border: 1px solid rgba(156,74,74,0.3);
-    border-radius: var(--radius);
-    color: var(--red-text);
-    font-size: 13px;
-    padding: 10px 14px;
-    margin-top: 1rem;
-    display: none;
-    font-family: var(--mono);
-  }
+  .error-msg { background: var(--red-bg); border: 1px solid rgba(156,74,74,0.3); border-radius: var(--radius); color: var(--red-text); font-size: 13px; padding: 10px 14px; margin-top: 1rem; display: none; font-family: var(--mono); }
 
+  /* Results */
   .results { display: none; margin-top: 1.5rem; }
-
-  .results-meta {
-    font-size: 12px;
-    font-family: var(--mono);
-    color: var(--text-dim);
-    margin-bottom: 1rem;
-    letter-spacing: 0.02em;
-  }
-
+  .results-meta { font-size: 12px; font-family: var(--mono); color: var(--text-dim); margin-bottom: 1.25rem; letter-spacing: 0.02em; }
   .results-meta a { color: var(--accent); text-decoration: none; }
 
-  .results-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  /* Score card */
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; text-align: center; }
+  .score-number { font-family: var(--mono); font-size: 56px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .score-number.high { color: var(--green-text); }
+  .score-number.medium { color: var(--amber-text); }
+  .score-number.low { color: var(--red-text); }
+  .score-label { font-family: var(--mono); font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .score-verdict { font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 500px; margin: 0 auto 1rem; }
+  .score-disclaimer { font-family: var(--mono); font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; line-height: 1.6; }
 
+  /* Check rows */
+  .checks-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
+  .check-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .check-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .check-name { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .check-pts { font-family: var(--mono); font-size: 12px; }
+  .check-pts.full { color: var(--green-text); }
+  .check-pts.partial { color: var(--amber-text); }
+  .check-pts.zero { color: var(--red-text); }
+  .check-detail { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .check-flag { display: inline-block; font-family: var(--mono); font-size: 10px; padding: 2px 7px; border-radius: 3px; margin-bottom: 6px; }
+  .check-flag.pass { background: var(--green-bg); color: var(--green-text); }
+  .check-flag.partial { background: var(--amber-bg); color: var(--amber-text); }
+  .check-flag.fail { background: var(--red-bg); color: var(--red-text); }
 
-  .result-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-  }
+  /* Recommendations */
+  .reco-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .reco-title { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .reco-item { font-size: 13px; color: var(--text-muted); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.6; display: flex; gap: 10px; }
+  .reco-item:last-child { border-bottom: none; }
+  .reco-num { font-family: var(--mono); font-size: 11px; color: var(--accent); min-width: 20px; padding-top: 2px; }
 
-  .result-type {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 10px;
-  }
-
-  .result-prompt {
-    font-size: 13px;
-    color: var(--text-muted);
-    font-style: italic;
-    margin-bottom: 12px;
-    line-height: 1.5;
-    border-left: 2px solid var(--border);
-    padding-left: 10px;
-  }
-
-  .signal {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 4px;
-    margin-bottom: 12px;
-    letter-spacing: 0.03em;
-  }
-
-  .signal-dot { width: 7px; height: 7px; border-radius: 50%; }
-
-  .signal.strong { background: var(--green-bg); color: var(--green-text); }
-  .signal.strong .signal-dot { background: var(--green); }
-  .signal.weak { background: var(--amber-bg); color: var(--amber-text); }
-  .signal.weak .signal-dot { background: var(--amber); }
-  .signal.none { background: var(--red-bg); color: var(--red-text); }
-  .signal.none .signal-dot { background: var(--red); }
-
-  .signal-label { font-size: 11px; color: var(--text-dim); font-family: var(--mono); margin-bottom: 8px; }
-
-  .result-response {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.7;
-    
-    
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  .result-response::-webkit-scrollbar { width: 4px; }
-  .result-response::-webkit-scrollbar-track { background: transparent; }
-  .result-response::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
-
-  .footer {
-    border-top: 1px solid var(--border);
-    padding: 1rem 2rem;
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-dim);
-    font-family: var(--mono);
-    margin-top: 4rem;
-  }
-
+  .footer { border-top: 1px solid var(--border); padding: 1rem 2rem; text-align: center; font-size: 12px; color: var(--text-dim); font-family: var(--mono); margin-top: 4rem; }
   .footer a { color: var(--text-muted); text-decoration: none; }
   .footer a:hover { color: var(--accent); }
 </style>
@@ -354,13 +141,13 @@
 
 <header class="header">
   <div class="logo">smallware<span>.</span>co</div>
-  <div class="badge">experiment</div>
+  <div class="badge">v0.1 — light</div>
 </header>
 
 <main class="main">
   <div class="hero">
     <h1>llm-<em>visibility</em>-checker</h1>
-    <p>Test whether LLMs can find and cite your content in their responses. Runs two independent tests — citation and knowledge — each scored with a confidence signal.</p>
+    <p>Estimates the likelihood that LLMs will cite your content. Runs three checks — domain recognition, citation likelihood, and page signals — scored into a single visibility estimate.</p>
   </div>
 
   <div class="form-section">
@@ -368,10 +155,9 @@
       <label for="inp-url">Content URL</label>
       <input type="url" id="inp-url" placeholder="https://yoursite.com/your-post" autocomplete="off" />
     </div>
-
     <div class="form-row">
-      <label for="inp-keyword">Topic / keyword <span class="opt">(optional — sharpens the test prompt)</span></label>
-      <input type="text" id="inp-keyword" placeholder="e.g. local LLM setup, Playwright testing" autocomplete="off" />
+      <label for="inp-keyword">Topic / keyword <span class="opt">(optional — improves citation check accuracy)</span></label>
+      <input type="text" id="inp-keyword" placeholder="e.g. happy path testing, bug reports, local LLM setup" autocomplete="off" />
     </div>
 
     <hr class="divider">
@@ -398,7 +184,6 @@
       </div>
     </div>
 
-    <!-- Z.AI model selector — only shown when Z.AI is active -->
     <div class="zai-model-row" id="zai-model-row">
       <label for="zai-model">Model</label>
       <select id="zai-model">
@@ -423,36 +208,12 @@
   </div>
 
   <div class="status" id="status">
-    <span class="dot"></span> <span id="status-text">running both tests...</span>
+    <span class="dot"></span> <span id="status-text">running checks...</span>
   </div>
 
   <div class="error-msg" id="error-msg"></div>
 
-  <div class="results" id="results">
-    <div class="results-meta" id="results-meta"></div>
-    <div class="results-grid">
-      <div class="result-card">
-        <div class="result-type">Citation test</div>
-        <div class="result-prompt" id="ct-prompt"></div>
-        <div class="signal-label">Confidence signal</div>
-        <div class="signal none" id="ct-signal">
-          <span class="signal-dot"></span>
-          <span class="signal-text">No signal</span>
-        </div>
-        <div class="result-response" id="ct-response"></div>
-      </div>
-      <div class="result-card">
-        <div class="result-type">Knowledge test</div>
-        <div class="result-prompt" id="kt-prompt"></div>
-        <div class="signal-label">Confidence signal</div>
-        <div class="signal none" id="kt-signal">
-          <span class="signal-dot"></span>
-          <span class="signal-text">No signal</span>
-        </div>
-        <div class="result-response" id="kt-response"></div>
-      </div>
-    </div>
-  </div>
+  <div class="results" id="results"></div>
 </main>
 
 <footer class="footer">
@@ -461,41 +222,23 @@
 
 <script>
 /**
- * llm-visibility-checker
+ * llm-visibility-checker v0.1 — light
+ * Estimates LLM citation likelihood via three checks:
+ * 1. Domain recognition — does the LLM know this site exists (no URL in prompt)
+ * 2. Citation likelihood — does the LLM cite this domain for the topic
+ * 3. Page signals — schema/JSON-LD present on the page (via fetch)
  *
- * Standalone BYOK tool. Four providers: Anthropic, OpenAI, Gemini, Z.AI (GLM).
- * Session-only key — never stored.
- * Two-prompt strategy: citation test + knowledge test.
- * Three-tier confidence signal per test.
+ * Scoring: 0-100 points. Directional estimate, not ground truth.
+ * For verified AI citation data, use Bing Webmaster Tools > AI Performance.
  */
 
 let currentProvider = 'anthropic';
 
 const PROVIDERS = {
-  anthropic: {
-    label: 'Claude',
-    model: 'claude-sonnet-4-6',
-    placeholder: 'sk-ant-...',
-    hint: 'Anthropic — session only, not stored'
-  },
-  openai: {
-    label: 'ChatGPT',
-    model: 'gpt-4o',
-    placeholder: 'sk-...',
-    hint: 'OpenAI — session only, not stored'
-  },
-  gemini: {
-    label: 'Gemini',
-    model: 'gemini-2.0-flash',
-    placeholder: 'AIza...',
-    hint: 'Google AI Studio — session only, not stored'
-  },
-  zai: {
-    label: 'Z.AI',
-    model: 'glm-4.7-flash',
-    placeholder: 'Z.AI API key',
-    hint: 'Z.AI (BigModel) — session only, not stored'
-  }
+  anthropic: { label: 'Claude', model: 'claude-sonnet-4-6', placeholder: 'sk-ant-...', hint: 'Anthropic — session only, not stored' },
+  openai:    { label: 'ChatGPT', model: 'gpt-4o', placeholder: 'sk-...', hint: 'OpenAI — session only, not stored' },
+  gemini:    { label: 'Gemini', model: 'gemini-2.0-flash', placeholder: 'AIza...', hint: 'Google AI Studio — session only, not stored' },
+  zai:       { label: 'Z.AI', model: 'glm-4.7-flash', placeholder: 'Z.AI API key', hint: 'Z.AI (BigModel) — session only, not stored' }
 };
 
 function selectProvider(id, btn) {
@@ -506,8 +249,6 @@ function selectProvider(id, btn) {
   document.getElementById('inp-key').value = '';
   document.getElementById('inp-key').placeholder = p.placeholder;
   document.getElementById('key-hint').textContent = p.hint;
-  document.getElementById('status-text').textContent = 'running both tests against ' + p.model + '...';
-  // Show/hide Z.AI model selector
   document.getElementById('zai-model-row').className = 'zai-model-row' + (id === 'zai' ? ' visible' : '');
 }
 
@@ -519,67 +260,29 @@ function toggleKey(e) {
 }
 
 function getDomain(url) {
-  try { return new URL(url).hostname.replace('www.', ''); }
-  catch(e) { return ''; }
+  try { return new URL(url).hostname.replace('www.', ''); } catch(e) { return ''; }
 }
 
-function getPathWords(url) {
+function getSlugWords(url) {
   try {
-    return new URL(url).pathname
-      .split('/').filter(Boolean)
-      .flatMap(p => p.split('-'))
-      .filter(w => w.length > 3);
+    return new URL(url).pathname.split('/').filter(Boolean)
+      .flatMap(p => p.split('-')).filter(w => w.length > 3);
   } catch(e) { return []; }
 }
 
-/**
- * scoreSignal
- * Strong = domain or URL cited directly in response.
- * Weak = path words or site name referenced without direct citation.
- * None = no traceable connection found.
- */
-function scoreSignal(responseText, url) {
-  // Normalize: strip www. from response so www/non-www both match
-  const lower = responseText.toLowerCase().replace(/www\./g, '');
-  const domain = getDomain(url).toLowerCase(); // already strips www.
-  const urlLower = url.toLowerCase().replace(/www\./g, '');
-  const siteName = domain.split('.')[0];
-
-  // Strong: domain or full URL appears anywhere in response
-  if (lower.includes(domain) || lower.includes(urlLower)) return 'strong';
-
-  // Weak: path slug words or site name mentioned without direct URL
-  const pathWords = getPathWords(url);
-  const hasPathHit = pathWords.some(w => lower.includes(w.toLowerCase()));
-  const hasSiteHit = siteName.length > 3 && lower.includes(siteName.toLowerCase());
-
-  if (hasPathHit || hasSiteHit) return 'weak';
-  return 'none';
+function getTopic(keyword, url) {
+  if (keyword && keyword.trim()) return keyword.trim();
+  const words = getSlugWords(url);
+  return words.slice(0, 5).join(' ') || getDomain(url);
 }
 
-function applySignal(elId, level) {
-  const el = document.getElementById(elId);
-  const labels = { strong: 'Strong signal', weak: 'Weak signal', none: 'No signal' };
-  el.className = 'signal ' + level;
-  el.querySelector('.signal-text').textContent = labels[level];
-}
-
-/* — Provider API callers — */
+/* — API callers — */
 
 async function callAnthropic(apiKey, prompt) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 800, messages: [{ role: 'user', content: prompt }] })
   });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
@@ -589,15 +292,8 @@ async function callAnthropic(apiKey, prompt) {
 async function callOpenAI(apiKey, prompt) {
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + apiKey
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({ model: 'gpt-4o', max_tokens: 800, messages: [{ role: 'user', content: prompt }] })
   });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
@@ -606,32 +302,18 @@ async function callOpenAI(apiKey, prompt) {
 
 async function callGemini(apiKey, prompt) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }]
-    })
-  });
+  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
   return data.candidates[0].content.parts.map(p => p.text).join('');
 }
 
 async function callZAI(apiKey, prompt) {
-  // Z.AI uses GLM models via BigModel API — OpenAI-compatible endpoint
   const model = document.getElementById('zai-model').value;
   const res = await fetch('https://api.z.ai/api/coding/paas/v4/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + apiKey
-    },
-    body: JSON.stringify({
-      model: model,
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({ model, max_tokens: 800, messages: [{ role: 'user', content: prompt }] })
   });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
@@ -645,18 +327,184 @@ async function callLLM(apiKey, prompt) {
   if (currentProvider === 'zai') return callZAI(apiKey, prompt);
 }
 
+/* — Check 1: Domain recognition
+   Ask about the domain with no URL in prompt.
+   If domain appears in response = model knows it from training data.
+   Points: 0, 20, or 35
+*/
+async function checkDomainRecognition(apiKey, domain, topic) {
+  const siteName = domain.split('.')[0];
+  const prompt = `What do you know about the website "${domain}"? Describe what it covers, who runs it, and what kind of content it publishes. Be honest if you have no knowledge of it.`;
+  const response = await callLLM(apiKey, prompt);
+  const lower = response.toLowerCase().replace(/www\./g, '');
+
+  // Check if model shows genuine knowledge vs admits ignorance
+  const knowsIt = lower.includes(domain.toLowerCase()) || lower.includes(siteName.toLowerCase());
+  const admitsIgnorance = /don't have|do not have|no (specific |direct )?knowledge|not familiar|not aware|no information|cannot find|can't find/i.test(response);
+  const fabricated = /likely|probably|appears to be|seems to be|based on the (domain|name)|i would guess|i can infer/i.test(response);
+
+  let pts, flag, detail;
+
+  if (knowsIt && !admitsIgnorance && !fabricated) {
+    pts = 35; flag = 'pass';
+    detail = 'Model has genuine knowledge of this domain from training data.';
+  } else if (fabricated || (knowsIt && admitsIgnorance)) {
+    pts = 20; flag = 'partial';
+    detail = 'Model inferred details from the domain name — not confirmed training data recall.';
+  } else {
+    pts = 0; flag = 'fail';
+    detail = 'Model has no knowledge of this domain. It is not present in training data or too new to be indexed.';
+  }
+
+  return { pts, flag, detail, response };
+}
+
+/* — Check 2: Citation likelihood
+   Ask about the topic with no URL. See if domain is cited naturally.
+   Points: 0, 25, or 40
+*/
+async function checkCitationLikelihood(apiKey, domain, topic) {
+  const prompt = `What are the best online resources, blogs, or websites to learn about "${topic}"? List specific sites or URLs you would recommend.`;
+  const response = await callLLM(apiKey, prompt);
+  const lower = response.toLowerCase().replace(/www\./g, '');
+  const siteName = domain.split('.')[0];
+
+  const cited = lower.includes(domain.toLowerCase());
+  const siteHit = siteName.length > 3 && lower.includes(siteName.toLowerCase());
+
+  let pts, flag, detail;
+
+  if (cited) {
+    pts = 40; flag = 'pass';
+    detail = `Model cited ${domain} as a recommended resource for this topic without being prompted.`;
+  } else if (siteHit) {
+    pts = 25; flag = 'partial';
+    detail = `Model referenced the site name but not the full domain. Partial citation signal.`;
+  } else {
+    pts = 0; flag = 'fail';
+    detail = `Model did not cite ${domain} for this topic. Other sources were recommended instead.`;
+  }
+
+  return { pts, flag, detail, response };
+}
+
+/* — Check 3: Page signals
+   Fetch the page, check for schema/JSON-LD, meta description, og tags.
+   Points: 0, 10, or 25
+*/
+async function checkPageSignals(url) {
+  try {
+    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    const data = await res.json();
+    const html = data.contents || '';
+
+    const hasJsonLd = /<script[^>]*type=["']application\/ld\+json["'][^>]*>/i.test(html);
+    const hasMetaDesc = /<meta[^>]*name=["']description["'][^>]*content=["'][^"']{10,}/i.test(html);
+    const hasOgTags = /<meta[^>]*property=["']og:/i.test(html);
+    const hasSchema = /schema\.org/i.test(html);
+
+    const signals = [hasJsonLd, hasMetaDesc, hasOgTags, hasSchema].filter(Boolean).length;
+
+    let pts, flag, detail, found = [];
+    if (hasJsonLd || hasSchema) found.push('JSON-LD / Schema.org');
+    if (hasMetaDesc) found.push('meta description');
+    if (hasOgTags) found.push('Open Graph tags');
+
+    if (signals >= 3) { pts = 25; flag = 'pass'; detail = `Strong page signals found: ${found.join(', ')}.`; }
+    else if (signals >= 1) { pts = 10; flag = 'partial'; detail = `Some page signals found: ${found.join(', ')}. Missing structured data may reduce LLM parsability.`; }
+    else { pts = 0; flag = 'fail'; detail = 'No schema, JSON-LD, or meta signals detected. Page may be difficult for LLMs to parse and categorize.'; }
+
+    return { pts, flag, detail };
+  } catch(e) {
+    return { pts: 0, flag: 'partial', detail: 'Could not fetch page to check signals. Check manually.' };
+  }
+}
+
+/* — Score rendering — */
+function scoreClass(score) {
+  if (score >= 65) return 'high';
+  if (score >= 35) return 'medium';
+  return 'low';
+}
+
+function scoreVerdict(score, domain) {
+  if (score >= 65) return `${domain} has a good chance of being cited by LLMs. The model shows recognition and citation signals for this content.`;
+  if (score >= 35) return `${domain} has partial LLM visibility. Some signals are present but gaps exist — addressing the recommendations below can improve citation likelihood.`;
+  return `${domain} has low LLM visibility. The model does not recognize this domain or cite it for the topic. Focus on the recommendations below.`;
+}
+
+function ptsClass(flag) {
+  if (flag === 'pass') return 'full';
+  if (flag === 'partial') return 'partial';
+  return 'zero';
+}
+
+function buildRecommendations(d1, d2, d3) {
+  const recos = [];
+  if (d1.flag === 'fail') recos.push('Build domain authority signals — get cited by established sites, publish consistently, and ensure your site is crawlable by AI training bots.');
+  if (d1.flag === 'partial') recos.push('Model inferred your domain from its name. Strengthen brand mentions across the web — guest posts, directories, and syndication help get your domain into LLM training data.');
+  if (d2.flag === 'fail') recos.push('Your domain is not being recommended for this topic. Create stronger topical authority — publish more depth on this subject and build internal linking around it.');
+  if (d2.flag === 'partial') recos.push('Model recognizes your brand but doesn\'t cite your domain directly. Ensure your domain name and site name are consistent across all platforms.');
+  if (d3.flag === 'fail') recos.push('Add JSON-LD structured data and Schema.org markup to your pages. Machine-readable content is a strong LLM visibility signal.');
+  if (d3.flag === 'partial') recos.push('Improve page signals — add or complete JSON-LD, Open Graph tags, and a descriptive meta description for better LLM parsability.');
+  if (recos.length === 0) recos.push('Signals look good. Monitor AI citation performance in Bing Webmaster Tools > AI Performance for real-world citation data.');
+  return recos;
+}
+
+function renderResults(url, domain, topic, d1, d2, d3, provider, modelLabel) {
+  const total = Math.min(100, d1.pts + d2.pts + d3.pts);
+  const sc = scoreClass(total);
+  const recos = buildRecommendations(d1, d2, d3);
+  const now = new Date().toLocaleTimeString();
+
+  const checkHTML = (name, maxPts, d) => `
+    <div class="check-row">
+      <div class="check-header">
+        <span class="check-name">${name}</span>
+        <span class="check-pts ${ptsClass(d.flag)}">${d.pts} / ${maxPts} pts</span>
+      </div>
+      <span class="check-flag ${d.flag}">${d.flag === 'pass' ? '✓ pass' : d.flag === 'partial' ? '~ partial' : '✗ fail'}</span>
+      <div class="check-detail">${d.detail}</div>
+    </div>`;
+
+  return `
+    <div class="results-meta">tested via ${provider} (${modelLabel}): <a href="${url}" target="_blank">${url}</a> — ${now}</div>
+
+    <div class="score-card">
+      <div class="score-number ${sc}">${total}</div>
+      <div class="score-label">visibility estimate</div>
+      <div class="score-verdict">${scoreVerdict(total, domain)}</div>
+      <div class="score-disclaimer">
+        ⓘ This score is a directional estimate based on LLM reasoning and page signal checks — not a live crawl or search index. 
+        Results reflect training data signals at the time of the model's last update. 
+        For verified AI citation data, use Bing Webmaster Tools → AI Performance.
+      </div>
+    </div>
+
+    <div class="checks-list">
+      ${checkHTML('Check 1 — Domain Recognition', 35, d1)}
+      ${checkHTML('Check 2 — Citation Likelihood', 40, d2)}
+      ${checkHTML('Check 3 — Page Signals', 25, d3)}
+    </div>
+
+    <div class="reco-section">
+      <div class="reco-title">// recommendations</div>
+      ${recos.map((r, i) => `<div class="reco-item"><span class="reco-num">${String(i+1).padStart(2,'0')}</span><span>${r}</span></div>`).join('')}
+    </div>`;
+}
+
+/* — Main — */
 async function runCheck() {
   const url = document.getElementById('inp-url').value.trim();
   const keyword = document.getElementById('inp-keyword').value.trim();
   const apiKey = document.getElementById('inp-key').value.trim();
-
   const errEl = document.getElementById('error-msg');
   const statusEl = document.getElementById('status');
+  const statusText = document.getElementById('status-text');
   const resultsEl = document.getElementById('results');
   const runBtn = document.getElementById('run-btn');
 
   function showError(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
-
   errEl.style.display = 'none';
   resultsEl.style.display = 'none';
 
@@ -665,37 +513,25 @@ async function runCheck() {
   if (!apiKey) { showError('Please enter your API key for ' + PROVIDERS[currentProvider].label + '.'); return; }
 
   const domain = getDomain(url);
-  const topic = keyword || domain;
+  const topic = getTopic(keyword, url);
   const p = PROVIDERS[currentProvider];
   const modelLabel = currentProvider === 'zai' ? document.getElementById('zai-model').value : p.model;
-
-  const citationPrompt = `What are the best websites, blogs, or online resources to read about "${topic}"? Please be specific — include URLs or site names where you know them.`;
-  const knowledgePrompt = `I found this URL: ${url}${keyword ? ` — it covers the topic of "${keyword}"` : ''}. What do you know about this site or this content? Can you describe what it likely covers?`;
-
-  document.getElementById('ct-prompt').textContent = `"What are the best resources about ${topic}?"`;
-  document.getElementById('kt-prompt').textContent = `"What do you know about ${url}?"`;
-  document.getElementById('status-text').textContent = `running both tests against ${modelLabel}...`;
 
   runBtn.disabled = true;
   statusEl.style.display = 'block';
 
   try {
-    const [ctResp, ktResp] = await Promise.all([
-      callLLM(apiKey, citationPrompt),
-      callLLM(apiKey, knowledgePrompt)
-    ]);
+    statusText.textContent = 'check 1/3 — domain recognition...';
+    const d1 = await checkDomainRecognition(apiKey, domain, topic);
 
-    applySignal('ct-signal', scoreSignal(ctResp, url));
-    applySignal('kt-signal', scoreSignal(ktResp, url));
+    statusText.textContent = 'check 2/3 — citation likelihood...';
+    const d2 = await checkCitationLikelihood(apiKey, domain, topic);
 
-    document.getElementById('ct-response').textContent = ctResp;
-    document.getElementById('kt-response').textContent = ktResp;
-
-    const now = new Date().toLocaleTimeString();
-    document.getElementById('results-meta').innerHTML =
-      `tested via ${p.label} (${modelLabel}): <a href="${url}" target="_blank">${url}</a> &mdash; ${now}`;
+    statusText.textContent = 'check 3/3 — page signals...';
+    const d3 = await checkPageSignals(url);
 
     statusEl.style.display = 'none';
+    resultsEl.innerHTML = renderResults(url, domain, topic, d1, d2, d3, p.label, modelLabel);
     resultsEl.style.display = 'block';
   } catch(e) {
     statusEl.style.display = 'none';
@@ -705,10 +541,7 @@ async function runCheck() {
   runBtn.disabled = false;
 }
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') runCheck();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Enter') runCheck(); });
 </script>
-
 </body>
 </html>
