@@ -1,489 +1,712 @@
-<!--
-  LLM Visibility Checker
-  Built by Jaren Cudilla — https://engineeredai.net
-  Free to use with attribution. Link back to https://engineeredai.net if you share or fork this.
-  Source: https://github.com/smallware-co/llm-visibility-checker
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>LLM Visibility Checker — Smallware</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Visibility Checker — Smallware Co</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
-    --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e; --border: #2a2a2a; --border-hover: #3a3a3a;
-    --text: #f0ede8; --text-muted: #888; --text-dim: #555; --accent: #F5A623;
-    --accent-dim: rgba(245,166,35,0.12); --accent-border: rgba(245,166,35,0.3);
-    --info: #4a9eff; --info-dim: rgba(74,158,255,0.1);
-    --green: #4caf7d; --green-dim: rgba(76,175,125,0.12); --green-border: rgba(76,175,125,0.3);
-    --red: #ff6b6b; --red-dim: rgba(255,107,107,0.1); --red-border: rgba(255,107,107,0.25);
-    --warn: #e8941a; --warn-dim: rgba(232,148,26,0.1);
-    --radius: 10px; --radius-sm: 6px;
-    --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222222;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --text: #e8e8e8;
+    --text-muted: #888;
+    --text-dim: #555;
+    --accent: #d4a853;
+    --accent-dim: rgba(212,168,83,0.12);
+    --green: #4a9c6d;
+    --green-bg: rgba(74,156,109,0.12);
+    --green-text: #6dba8a;
+    --amber: #b8862a;
+    --amber-bg: rgba(184,134,42,0.12);
+    --amber-text: #d4a853;
+    --red: #9c4a4a;
+    --red-bg: rgba(156,74,74,0.12);
+    --red-text: #c47070;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
-  header { border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; align-items: center; gap: 12px; }
-  .logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.05em; }
-  .logo span { color: var(--text-dim); }
-  .tagline { font-size: 12px; color: var(--text-dim); font-family: var(--mono); border-left: 1px solid var(--border); padding-left: 12px; margin-left: 4px; }
 
-  main { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+  }
 
-  .panel-hero { margin-bottom: 2rem; }
-  .panel-hero h1 { font-family: var(--mono); font-size: clamp(20px, 3.5vw, 28px); font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
-  .panel-hero h1 em { color: var(--accent); font-style: normal; }
-  .panel-hero p { font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 580px; }
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo { font-family: var(--mono); font-size: 13px; color: var(--text-muted); letter-spacing: 0.02em; }
+  .logo span { color: var(--accent); }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(212,168,83,0.25);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .main { max-width: 780px; margin: 0 auto; padding: 3rem 2rem; }
+
+  .hero { margin-bottom: 2.5rem; }
+
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em { font-style: normal; color: var(--accent); }
+
+  .hero p { font-size: 14px; color: var(--text-muted); line-height: 1.7; max-width: 560px; }
+
+  .form-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row { margin-bottom: 1rem; }
+  .form-row:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  label .opt { font-size: 11px; color: var(--text-dim); text-transform: none; letter-spacing: 0; font-family: var(--sans); }
+
+  input[type="url"],
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--sans);
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="url"]:focus,
+  input[type="text"]:focus,
+  input[type="password"]:focus { border-color: var(--border-hover); }
+
+  input::placeholder { color: var(--text-dim); }
 
   /* Provider selector */
-  .provider-row { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .provider-btn {
-    font-family: var(--mono); font-size: 12px; padding: 8px 16px;
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--surface); color: var(--text-muted);
-    cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  .provider-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1rem;
   }
-  .provider-btn .sub { font-size: 10px; color: var(--text-dim); }
+
+  @media (max-width: 560px) { .provider-row { grid-template-columns: repeat(2, 1fr); } }
+
+  .provider-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 10px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    letter-spacing: 0.02em;
+  }
+
   .provider-btn:hover { border-color: var(--border-hover); color: var(--text); }
-  .provider-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-  .provider-btn.active .sub { color: var(--accent); opacity: 0.7; }
 
-  /* Key input area */
-  .key-block { margin-bottom: 1.5rem; }
-  .key-row { display: flex; gap: 8px; align-items: center; }
-  .key-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: var(--mono); font-size: 13px; padding: 10px 14px; outline: none; transition: border-color 0.15s; }
-  .key-input:focus { border-color: var(--accent); }
-  .key-input::placeholder { color: var(--text-dim); }
-  .show-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted); font-family: var(--mono); font-size: 11px; padding: 10px 14px; cursor: pointer; white-space: nowrap; }
-  .show-btn:hover { color: var(--text); }
-  .key-note { font-size: 11px; color: var(--text-dim); font-family: var(--mono); margin-top: 6px; }
-  .key-note a { color: var(--accent); text-decoration: none; }
+  .provider-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
 
-  /* Model selector (Z.AI only) */
-  .model-row { display: none; margin-bottom: 1rem; }
-  .model-row.visible { display: flex; align-items: center; gap: 10px; }
-  .model-row label { font-family: var(--mono); font-size: 11px; color: var(--text-dim); white-space: nowrap; }
-  select { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: var(--mono); font-size: 12px; padding: 8px 12px; outline: none; cursor: pointer; }
-  select:focus { border-color: var(--accent); }
-  select option { background: #1e1e1e; }
+  .provider-btn .provider-name { display: block; font-size: 13px; margin-bottom: 2px; }
+  .provider-btn .provider-model { display: block; font-size: 10px; color: var(--text-dim); letter-spacing: 0.03em; }
+  .provider-btn.active .provider-model { color: var(--amber-text); opacity: 0.7; }
 
-  /* URL + keyword inputs */
-  .input-block { margin-bottom: 1.5rem; }
-  .input-group { margin-bottom: 10px; }
-  .input-label { font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
-  .input-optional { font-size: 9px; color: var(--text-dim); opacity: 0.6; }
-  .text-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: var(--sans); font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.15s; }
-  .text-input:focus { border-color: var(--accent); }
-  .text-input::placeholder { color: var(--text-dim); }
+  /* Z.AI model select */
+  .zai-model-row {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .zai-model-row.visible { display: flex; }
+  .zai-model-row label { margin-bottom: 0; white-space: nowrap; }
+  select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 10px;
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus { border-color: var(--border-hover); }
+  select option { background: #222; }
 
-  .run-btn { width: 100%; background: var(--accent); color: #0d0d0d; border: none; border-radius: var(--radius-sm); font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 12px 20px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; letter-spacing: 0.04em; }
+  .key-row { display: flex; gap: 8px; align-items: flex-end; }
+  .key-row input { flex: 1; font-family: var(--mono); font-size: 13px; }
+
+  .key-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .key-toggle:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+  .run-btn {
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    color: #0f0f0f;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--mono);
+    padding: 12px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
+  }
+
   .run-btn:hover { opacity: 0.88; }
-  .run-btn:active { transform: scale(0.98); }
-  .run-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .status { font-family: var(--mono); font-size: 12px; color: var(--text-dim); min-height: 18px; margin-top: 10px; }
-  .status.active { color: var(--accent); }
-  .status.error { color: var(--red); }
+  .status {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 1rem 0;
+    display: none;
+  }
 
-  /* Results */
-  .results-wrap { margin-top: 2.5rem; }
-  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
-  .results-header h2 { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; }
+  .status .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    animation: pulse 1s infinite;
+  }
 
-  /* Test cards */
-  .test-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 12px; }
-  .test-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .test-name { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
-  .confidence-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 3px 12px; border-radius: 20px; }
-  .confidence-high { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
-  .confidence-medium { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
-  .confidence-low { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  .signal-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .signal-label { font-family: var(--mono); font-size: 10px; color: var(--text-dim); width: 80px; flex-shrink: 0; }
-  .bar-track { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.6s ease; }
-  .bar-fill.green { background: var(--green); }
-  .bar-fill.red { background: var(--red); }
-  .signal-val { font-family: var(--mono); font-size: 10px; color: var(--text-muted); width: 30px; text-align: right; }
+  .error-msg {
+    background: var(--red-bg);
+    border: 1px solid rgba(156,74,74,0.3);
+    border-radius: var(--radius);
+    color: var(--red-text);
+    font-size: 13px;
+    padding: 10px 14px;
+    margin-top: 1rem;
+    display: none;
+    font-family: var(--mono);
+  }
 
-  .test-reasoning { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-  .test-excerpt { font-family: var(--mono); font-size: 11px; color: var(--text-dim); background: var(--surface2); border-left: 2px solid var(--accent-border); padding: 8px 12px; border-radius: 0 4px 4px 0; margin-top: 8px; line-height: 1.6; }
+  .results { display: none; margin-top: 1.5rem; }
 
-  /* Overall verdict */
-  .verdict-card { border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 12px; border: 1px solid; }
-  .verdict-card.visible { background: var(--green-dim); border-color: var(--green-border); }
-  .verdict-card.partial { background: var(--accent-dim); border-color: var(--accent-border); }
-  .verdict-card.invisible { background: var(--red-dim); border-color: var(--red-border); }
-  .verdict-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; margin-bottom: 6px; }
-  .verdict-card.visible .verdict-label { color: var(--green); }
-  .verdict-card.partial .verdict-label { color: var(--accent); }
-  .verdict-card.invisible .verdict-label { color: var(--red); }
-  .verdict-text { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+  .results-meta {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
 
-  .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-dim); font-family: var(--mono); font-size: 13px; border: 1px dashed var(--border); border-radius: var(--radius); margin-top: 2rem; }
-  .empty-state .big { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
+  .results-meta a { color: var(--accent); text-decoration: none; }
 
-  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--text-dim); font-family: var(--mono); border-top: 1px solid var(--border); margin-top: 4rem; }
-  footer a { color: var(--text-dim); text-decoration: none; }
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-  @media (max-width: 600px) { main { padding: 2rem 1rem 3rem; } header { padding: 1rem; } .tagline { display: none; } }
+  @media (max-width: 600px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .result-type {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .result-prompt {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    border-left: 2px solid var(--border);
+    padding-left: 10px;
+  }
+
+  .signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .signal-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .signal.strong { background: var(--green-bg); color: var(--green-text); }
+  .signal.strong .signal-dot { background: var(--green); }
+  .signal.weak { background: var(--amber-bg); color: var(--amber-text); }
+  .signal.weak .signal-dot { background: var(--amber); }
+  .signal.none { background: var(--red-bg); color: var(--red-text); }
+  .signal.none .signal-dot { background: var(--red); }
+
+  .signal-label { font-size: 11px; color: var(--text-dim); font-family: var(--mono); margin-bottom: 8px; }
+
+  .result-response {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .result-response::-webkit-scrollbar { width: 4px; }
+  .result-response::-webkit-scrollbar-track { background: transparent; }
+  .result-response::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    margin-top: 4rem;
+  }
+
+  .footer a { color: var(--text-muted); text-decoration: none; }
+  .footer a:hover { color: var(--accent); }
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">SMALLWARE<span>.CO</span></div>
-  <div class="tagline">// llm-visibility-checker</div>
+
+<header class="header">
+  <div class="logo">smallware<span>.</span>co</div>
+  <div class="badge">experiment</div>
 </header>
-<main>
-  <div class="panel-hero">
+
+<main class="main">
+  <div class="hero">
     <h1>llm-<em>visibility</em>-checker</h1>
     <p>Test whether LLMs can find and cite your content in their responses. Runs two independent tests — citation and knowledge — each scored with a confidence signal.</p>
   </div>
 
-  <!-- Provider selector -->
-  <div class="provider-row" id="providerRow">
-    <button class="provider-btn" data-provider="zai" onclick="selectProvider('zai')">
-      Z.AI <span class="sub">GLM models</span>
-    </button>
-    <button class="provider-btn" data-provider="claude" onclick="selectProvider('claude')">
-      Claude <span class="sub">claude-sonnet-4-6</span>
-    </button>
-    <button class="provider-btn" data-provider="openai" onclick="selectProvider('openai')">
-      ChatGPT <span class="sub">gpt-4o</span>
-    </button>
-    <button class="provider-btn" data-provider="gemini" onclick="selectProvider('gemini')">
-      Gemini <span class="sub">gemini-2.0-flash</span>
-    </button>
-  </div>
-
-  <!-- Model selector (Z.AI only) -->
-  <div class="model-row" id="modelRow">
-    <label>MODEL</label>
-    <select id="model">
-      <option value="glm-4-flash">GLM-4-Flash (fast)</option>
-      <option value="glm-4.7-flash" selected>GLM-4.7-Flash</option>
-      <option value="glm-4.7">GLM-4.7</option>
-      <option value="glm-4.6">GLM-4.6</option>
-    </select>
-  </div>
-
-  <!-- API Key -->
-  <div class="key-block">
-    <div class="key-row">
-      <input type="password" id="apikey" class="key-input" placeholder="Paste your API key here" />
-      <button class="show-btn" onclick="toggleKey()">show</button>
+  <div class="form-section">
+    <div class="form-row">
+      <label for="inp-url">Content URL</label>
+      <input type="url" id="inp-url" placeholder="https://yoursite.com/your-post" autocomplete="off" />
     </div>
-    <div class="key-note" id="keyNote">← select a provider above</div>
+
+    <div class="form-row">
+      <label for="inp-keyword">Topic / keyword <span class="opt">(optional — sharpens the test prompt)</span></label>
+      <input type="text" id="inp-keyword" placeholder="e.g. local LLM setup, Playwright testing" autocomplete="off" />
+    </div>
+
+    <hr class="divider">
+
+    <div class="form-row">
+      <label>LLM provider</label>
+      <div class="provider-row">
+        <button class="provider-btn active" onclick="selectProvider('anthropic', this)">
+          <span class="provider-name">Claude</span>
+          <span class="provider-model">claude-sonnet-4-6</span>
+        </button>
+        <button class="provider-btn" onclick="selectProvider('openai', this)">
+          <span class="provider-name">ChatGPT</span>
+          <span class="provider-model">gpt-4o</span>
+        </button>
+        <button class="provider-btn" onclick="selectProvider('gemini', this)">
+          <span class="provider-name">Gemini</span>
+          <span class="provider-model">gemini-2.0-flash</span>
+        </button>
+        <button class="provider-btn" onclick="selectProvider('zai', this)">
+          <span class="provider-name">Z.AI</span>
+          <span class="provider-model">glm-4.7-flash</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Z.AI model selector — only shown when Z.AI is active -->
+    <div class="zai-model-row" id="zai-model-row">
+      <label for="zai-model">Model</label>
+      <select id="zai-model">
+        <option value="glm-4-flash">GLM-4-Flash (fast)</option>
+        <option value="glm-4.7-flash" selected>GLM-4.7-Flash</option>
+        <option value="glm-4.7">GLM-4.7</option>
+        <option value="glm-4.6">GLM-4.6</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="inp-key">API key <span class="opt" id="key-hint">(Anthropic — session only, not stored)</span></label>
+      <div class="key-row">
+        <input type="password" id="inp-key" placeholder="sk-ant-..." autocomplete="off" />
+        <button class="key-toggle" onclick="toggleKey(event)">show</button>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:1.25rem;">
+      <button class="run-btn" id="run-btn" onclick="runCheck()">run visibility check</button>
+    </div>
   </div>
 
-  <!-- URL + Keyword -->
-  <div class="input-block">
-    <div class="input-group">
-      <div class="input-label">CONTENT URL</div>
-      <input type="text" id="contentUrl" class="text-input" placeholder="https://yoursite.com/your-post/" />
-    </div>
-    <div class="input-group">
-      <div class="input-label">TOPIC / KEYWORD <span class="input-optional">(optional — sharpens the test prompt)</span></div>
-      <input type="text" id="keyword" class="text-input" placeholder="e.g. local LLM setup, Playwright testing" />
-    </div>
+  <div class="status" id="status">
+    <span class="dot"></span> <span id="status-text">running both tests...</span>
   </div>
 
-  <button class="run-btn" id="runBtn" onclick="runCheck()">run visibility check</button>
-  <div class="status" id="status"></div>
+  <div class="error-msg" id="error-msg"></div>
 
-  <div id="results">
-    <div class="empty-state"><div class="big">⌗</div>your visibility report will appear here</div>
+  <div class="results" id="results">
+    <div class="results-meta" id="results-meta"></div>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-type">Citation test</div>
+        <div class="result-prompt" id="ct-prompt"></div>
+        <div class="signal-label">Confidence signal</div>
+        <div class="signal none" id="ct-signal">
+          <span class="signal-dot"></span>
+          <span class="signal-text">No signal</span>
+        </div>
+        <div class="result-response" id="ct-response"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-type">Knowledge test</div>
+        <div class="result-prompt" id="kt-prompt"></div>
+        <div class="signal-label">Confidence signal</div>
+        <div class="signal none" id="kt-signal">
+          <span class="signal-dot"></span>
+          <span class="signal-text">No signal</span>
+        </div>
+        <div class="result-response" id="kt-response"></div>
+      </div>
+    </div>
   </div>
 </main>
-<footer>built with Z.AI GLM · <a href="https://smallware.co">smallware.co</a> · <a href="https://engineeredai.net">engineeredai.net</a></footer>
+
+<footer class="footer">
+  <a href="https://smallware-co.github.io" target="_blank">smallware.co</a> &mdash; built by <a href="https://engineeredai.net" target="_blank">engineeredai.net</a>
+</footer>
 
 <script>
 /**
  * llm-visibility-checker
- * Tests LLM citation and knowledge visibility for a given URL.
- * Supports Z.AI (GLM), Claude (Anthropic), and ChatGPT (OpenAI).
- * Key stays in browser only — never stored or logged.
+ *
+ * Standalone BYOK tool. Four providers: Anthropic, OpenAI, Gemini, Z.AI (GLM).
+ * Session-only key — never stored.
+ * Two-prompt strategy: citation test + knowledge test.
+ * Three-tier confidence signal per test.
  */
 
-let currentProvider = null;
+let currentProvider = 'anthropic';
 
 const PROVIDERS = {
-  zai: {
-    label: 'Z.AI',
-    keyPlaceholder: 'Z.AI API key',
-    keyNote: '🔒 Session only, never stored. <a href="https://open.bigmodel.cn/usercenter/apikeys" target="_blank" rel="noopener">Get a free Z.AI key →</a>',
-    showModel: true,
-  },
-  claude: {
+  anthropic: {
     label: 'Claude',
-    keyPlaceholder: 'Anthropic API key (sk-ant-...)',
-    keyNote: '🔒 Session only, never stored. <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Get an Anthropic key →</a>',
-    showModel: false,
+    model: 'claude-sonnet-4-6',
+    placeholder: 'sk-ant-...',
+    hint: 'Anthropic — session only, not stored'
   },
   openai: {
     label: 'ChatGPT',
-    keyPlaceholder: 'OpenAI API key (sk-...)',
-    keyNote: '🔒 Session only, never stored. <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">Get an OpenAI key →</a>',
-    showModel: false,
+    model: 'gpt-4o',
+    placeholder: 'sk-...',
+    hint: 'OpenAI — session only, not stored'
   },
   gemini: {
     label: 'Gemini',
-    keyPlaceholder: 'Google AI Studio API key',
-    keyNote: '🔒 Session only, never stored. <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Get a Gemini key →</a>',
-    showModel: false,
+    model: 'gemini-2.0-flash',
+    placeholder: 'AIza...',
+    hint: 'Google AI Studio — session only, not stored'
   },
+  zai: {
+    label: 'Z.AI',
+    model: 'glm-4.7-flash',
+    placeholder: 'Z.AI API key',
+    hint: 'Z.AI (BigModel) — session only, not stored'
+  }
 };
 
-function selectProvider(p) {
-  currentProvider = p;
+function selectProvider(id, btn) {
+  currentProvider = id;
   document.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-provider="${p}"]`).classList.add('active');
-
-  const cfg = PROVIDERS[p];
-  document.getElementById('apikey').placeholder = cfg.keyPlaceholder;
-  document.getElementById('keyNote').innerHTML = cfg.keyNote;
-  document.getElementById('modelRow').className = 'model-row' + (cfg.showModel ? ' visible' : '');
+  btn.classList.add('active');
+  const p = PROVIDERS[id];
+  document.getElementById('inp-key').value = '';
+  document.getElementById('inp-key').placeholder = p.placeholder;
+  document.getElementById('key-hint').textContent = p.hint;
+  document.getElementById('status-text').textContent = 'running both tests against ' + p.model + '...';
+  // Show/hide Z.AI model selector
+  document.getElementById('zai-model-row').className = 'zai-model-row' + (id === 'zai' ? ' visible' : '');
 }
 
-function toggleKey() {
-  const el = document.getElementById('apikey');
-  el.type = el.type === 'password' ? 'text' : 'password';
+function toggleKey(e) {
+  const inp = document.getElementById('inp-key');
+  const btn = e.target;
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'hide'; }
+  else { inp.type = 'password'; btn.textContent = 'show'; }
 }
 
-function getKey() { return document.getElementById('apikey').value.trim(); }
-function getModel() { return document.getElementById('model').value; }
-
-// — API callers —
-
-async function callZAI(systemPrompt, userPrompt) {
-  const res = await fetch('https://api.z.ai/api/coding/paas/v4/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getKey() },
-    body: JSON.stringify({
-      model: getModel(), max_tokens: 2000,
-      messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }]
-    })
-  });
-  if (!res.ok) { const e = await res.text(); throw new Error('Z.AI ' + res.status + ': ' + e.slice(0, 120)); }
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || '';
+function getDomain(url) {
+  try { return new URL(url).hostname.replace('www.', ''); }
+  catch(e) { return ''; }
 }
 
-async function callClaude(systemPrompt, userPrompt) {
+function getPathWords(url) {
+  try {
+    return new URL(url).pathname
+      .split('/').filter(Boolean)
+      .flatMap(p => p.split('-'))
+      .filter(w => w.length > 3);
+  } catch(e) { return []; }
+}
+
+/**
+ * scoreSignal
+ * Strong = domain or URL cited directly in response.
+ * Weak = path words or site name referenced without direct citation.
+ * None = no traceable connection found.
+ */
+function scoreSignal(responseText, url) {
+  const lower = responseText.toLowerCase();
+  const domain = getDomain(url).toLowerCase();
+  const urlLower = url.toLowerCase();
+  const siteName = domain.split('.')[0];
+
+  if (lower.includes(urlLower) || lower.includes(domain)) return 'strong';
+
+  const pathWords = getPathWords(url);
+  const hasPathHit = pathWords.some(w => lower.includes(w.toLowerCase()));
+  const hasSiteHit = siteName.length > 3 && lower.includes(siteName.toLowerCase());
+
+  if (hasPathHit || hasSiteHit) return 'weak';
+  return 'none';
+}
+
+function applySignal(elId, level) {
+  const el = document.getElementById(elId);
+  const labels = { strong: 'Strong signal', weak: 'Weak signal', none: 'No signal' };
+  el.className = 'signal ' + level;
+  el.querySelector('.signal-text').textContent = labels[level];
+}
+
+/* — Provider API callers — */
+
+async function callAnthropic(apiKey, prompt) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': getKey(),
+      'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6', max_tokens: 2000,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }]
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
     })
   });
-  if (!res.ok) { const e = await res.text(); throw new Error('Claude ' + res.status + ': ' + e.slice(0, 120)); }
   const data = await res.json();
-  return data.content?.[0]?.text || '';
+  if (data.error) throw new Error(data.error.message);
+  return data.content.filter(b => b.type === 'text').map(b => b.text).join('');
 }
 
-async function callOpenAI(systemPrompt, userPrompt) {
+async function callOpenAI(apiKey, prompt) {
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getKey() },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + apiKey
+    },
     body: JSON.stringify({
-      model: 'gpt-4o', max_tokens: 2000,
-      messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }]
+      model: 'gpt-4o',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
     })
   });
-  if (!res.ok) { const e = await res.text(); throw new Error('OpenAI ' + res.status + ': ' + e.slice(0, 120)); }
   const data = await res.json();
-  return data.choices?.[0]?.message?.content || '';
+  if (data.error) throw new Error(data.error.message);
+  return data.choices[0].message.content;
 }
 
-async function callGemini(systemPrompt, userPrompt) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${getKey()}`;
+async function callGemini(apiKey, prompt) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      system_instruction: { parts: [{ text: systemPrompt }] },
-      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-      generationConfig: { maxOutputTokens: 2000 }
+      contents: [{ parts: [{ text: prompt }] }]
     })
   });
-  if (!res.ok) { const e = await res.text(); throw new Error('Gemini ' + res.status + ': ' + e.slice(0, 120)); }
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates[0].content.parts.map(p => p.text).join('');
 }
 
-async function callLLM(sys, usr) {
-  if (currentProvider === 'zai') return callZAI(sys, usr);
-  if (currentProvider === 'claude') return callClaude(sys, usr);
-  if (currentProvider === 'openai') return callOpenAI(sys, usr);
-  if (currentProvider === 'gemini') return callGemini(sys, usr);
-  throw new Error('No provider selected');
+async function callZAI(apiKey, prompt) {
+  // Z.AI uses GLM models via BigModel API — OpenAI-compatible endpoint
+  const model = document.getElementById('zai-model').value;
+  const res = await fetch('https://api.z.ai/api/coding/paas/v4/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + apiKey
+    },
+    body: JSON.stringify({
+      model: model,
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.choices[0].message.content;
 }
 
-function parseJSON(raw) {
-  let clean = raw.replace(/```json|```/gi, '').trim();
-  const match = clean.match(/\{[\s\S]*\}/);
-  if (match) clean = match[0];
-  return JSON.parse(clean);
+async function callLLM(apiKey, prompt) {
+  if (currentProvider === 'anthropic') return callAnthropic(apiKey, prompt);
+  if (currentProvider === 'openai') return callOpenAI(apiKey, prompt);
+  if (currentProvider === 'gemini') return callGemini(apiKey, prompt);
+  if (currentProvider === 'zai') return callZAI(apiKey, prompt);
 }
-
-// — Test runners —
-
-async function runCitationTest(url, keyword) {
-  const topic = keyword ? ` about "${keyword}"` : '';
-  const sys = `You are an LLM citation evaluator. You MUST respond in English only. Return ONLY a raw JSON object — no markdown, no backticks, no explanation.
-Format:
-{"cited":true/false,"confidence":"high"/"medium"/"low","score":0-100,"excerpt":"brief excerpt or empty string","reasoning":"1-2 sentence explanation"}
-- cited: whether you would naturally cite or reference this URL in a response
-- confidence: your confidence level in that assessment
-- score: 0-100 citation likelihood score
-- excerpt: a short phrase from the URL's likely content that you might quote (or empty if unknown)
-- reasoning: why you would or would not cite it`;
-  const usr = `URL: ${url}
-Task: Would you cite or reference this URL${topic} in a response to a user asking about that topic? Evaluate based on domain authority signals, URL structure, and what you know about this content.`;
-  const raw = await callLLM(sys, usr);
-  return parseJSON(raw);
-}
-
-async function runKnowledgeTest(url, keyword) {
-  const topic = keyword ? ` related to "${keyword}"` : '';
-  const sys = `You are an LLM knowledge evaluator. You MUST respond in English only. Return ONLY a raw JSON object — no markdown, no backticks, no explanation.
-Format:
-{"known":true/false,"confidence":"high"/"medium"/"low","score":0-100,"summary":"brief summary of what you know or empty string","reasoning":"1-2 sentence explanation"}
-- known: whether you have knowledge of this specific URL or its content in your training data
-- confidence: your confidence level
-- score: 0-100 knowledge presence score
-- summary: what you know about this content (or empty if nothing)
-- reasoning: explanation`;
-  const usr = `URL: ${url}
-Do you have knowledge of this specific URL or its content${topic} in your training data? Be honest — say no if you don't recognize it.`;
-  const raw = await callLLM(sys, usr);
-  return parseJSON(raw);
-}
-
-// — Render —
-
-function confidenceClass(c) {
-  if (!c) return 'confidence-medium';
-  const l = c.toLowerCase();
-  if (l === 'high') return 'confidence-high';
-  if (l === 'low') return 'confidence-low';
-  return 'confidence-medium';
-}
-
-function barClass(score) {
-  if (score >= 70) return 'green';
-  if (score <= 30) return 'red';
-  return '';
-}
-
-function verdictClass(citScore, knwScore) {
-  const avg = (citScore + knwScore) / 2;
-  if (avg >= 60) return 'visible';
-  if (avg >= 35) return 'partial';
-  return 'invisible';
-}
-
-function verdictText(vClass, url) {
-  const domain = (() => { try { return new URL(url).hostname; } catch { return url; } })();
-  if (vClass === 'visible') return `${domain} appears to be visible to this LLM. The model shows both citation willingness and knowledge presence — your content has likely been indexed and may surface in AI responses.`;
-  if (vClass === 'partial') return `${domain} has partial visibility. The model shows some signals but not strong across both tests. Consider improving topical authority, adding structured data, or building more inbound links to lift visibility.`;
-  return `${domain} has low LLM visibility. The model does not recognize or cite this content. It may be too new, too thin, or not yet indexed by training crawlers. Focus on E-E-A-T signals and citation-worthy content.`;
-}
-
-function renderResults(url, cit, knw) {
-  const vClass = verdictClass(cit.score, knw.score);
-
-  const verdictLabels = { visible: '✓ VISIBLE', partial: '~ PARTIAL VISIBILITY', invisible: '✗ LOW VISIBILITY' };
-
-  return `
-    <div class="results-wrap">
-      <div class="results-header">
-        <h2>// visibility report</h2>
-      </div>
-
-      <div class="verdict-card ${vClass}">
-        <div class="verdict-label">${verdictLabels[vClass]}</div>
-        <div class="verdict-text">${verdictText(vClass, url)}</div>
-      </div>
-
-      <div class="test-card">
-        <div class="test-card-header">
-          <span class="test-name">// TEST 1 — CITATION</span>
-          <span class="confidence-badge ${confidenceClass(cit.confidence)}">${(cit.confidence||'medium').toUpperCase()}</span>
-        </div>
-        <div class="signal-bar">
-          <span class="signal-label">likelihood</span>
-          <div class="bar-track"><div class="bar-fill ${barClass(cit.score)}" style="width:${cit.score}%"></div></div>
-          <span class="signal-val">${cit.score}</span>
-        </div>
-        <div class="test-reasoning">${cit.reasoning || ''}</div>
-        ${cit.excerpt ? `<div class="test-excerpt">"${cit.excerpt}"</div>` : ''}
-      </div>
-
-      <div class="test-card">
-        <div class="test-card-header">
-          <span class="test-name">// TEST 2 — KNOWLEDGE</span>
-          <span class="confidence-badge ${confidenceClass(knw.confidence)}">${(knw.confidence||'medium').toUpperCase()}</span>
-        </div>
-        <div class="signal-bar">
-          <span class="signal-label">presence</span>
-          <div class="bar-track"><div class="bar-fill ${barClass(knw.score)}" style="width:${knw.score}%"></div></div>
-          <span class="signal-val">${knw.score}</span>
-        </div>
-        <div class="test-reasoning">${knw.reasoning || ''}</div>
-        ${knw.summary ? `<div class="test-excerpt">${knw.summary}</div>` : ''}
-      </div>
-    </div>`;
-}
-
-// — Main —
 
 async function runCheck() {
-  const url = document.getElementById('contentUrl').value.trim();
-  const keyword = document.getElementById('keyword').value.trim();
+  const url = document.getElementById('inp-url').value.trim();
+  const keyword = document.getElementById('inp-keyword').value.trim();
+  const apiKey = document.getElementById('inp-key').value.trim();
+
+  const errEl = document.getElementById('error-msg');
   const statusEl = document.getElementById('status');
   const resultsEl = document.getElementById('results');
-  const btn = document.getElementById('runBtn');
+  const runBtn = document.getElementById('run-btn');
 
-  statusEl.className = 'status';
+  function showError(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
 
-  if (!currentProvider) { statusEl.textContent = '// select a provider first'; statusEl.className = 'status error'; return; }
-  if (!getKey()) { statusEl.textContent = '// paste your API key above'; statusEl.className = 'status error'; return; }
-  if (!url) { statusEl.textContent = '// enter a content URL first'; statusEl.className = 'status error'; return; }
+  errEl.style.display = 'none';
+  resultsEl.style.display = 'none';
 
-  btn.disabled = true;
-  resultsEl.innerHTML = '';
+  if (!url) { showError('Please enter a content URL.'); return; }
+  try { new URL(url); } catch(e) { showError('Please enter a valid URL (include https://).'); return; }
+  if (!apiKey) { showError('Please enter your API key for ' + PROVIDERS[currentProvider].label + '.'); return; }
+
+  const domain = getDomain(url);
+  const topic = keyword || domain;
+  const p = PROVIDERS[currentProvider];
+  const modelLabel = currentProvider === 'zai' ? document.getElementById('zai-model').value : p.model;
+
+  const citationPrompt = `What are the best websites, blogs, or online resources to read about "${topic}"? Please be specific — include URLs or site names where you know them.`;
+  const knowledgePrompt = `I found this URL: ${url}${keyword ? ` — it covers the topic of "${keyword}"` : ''}. What do you know about this site or this content? Can you describe what it likely covers?`;
+
+  document.getElementById('ct-prompt').textContent = `"What are the best resources about ${topic}?"`;
+  document.getElementById('kt-prompt').textContent = `"What do you know about ${url}?"`;
+  document.getElementById('status-text').textContent = `running both tests against ${modelLabel}...`;
+
+  runBtn.disabled = true;
+  statusEl.style.display = 'block';
 
   try {
-    statusEl.textContent = '// running citation test...'; statusEl.className = 'status active';
-    const cit = await runCitationTest(url, keyword);
+    const [ctResp, ktResp] = await Promise.all([
+      callLLM(apiKey, citationPrompt),
+      callLLM(apiKey, knowledgePrompt)
+    ]);
 
-    statusEl.textContent = '// running knowledge test...'; statusEl.className = 'status active';
-    const knw = await runKnowledgeTest(url, keyword);
+    applySignal('ct-signal', scoreSignal(ctResp, url));
+    applySignal('kt-signal', scoreSignal(ktResp, url));
 
-    statusEl.textContent = '// done'; statusEl.className = 'status';
-    resultsEl.innerHTML = renderResults(url, cit, knw);
-  } catch (err) {
-    statusEl.textContent = '// error: ' + err.message; statusEl.className = 'status error';
+    document.getElementById('ct-response').textContent = ctResp;
+    document.getElementById('kt-response').textContent = ktResp;
+
+    const now = new Date().toLocaleTimeString();
+    document.getElementById('results-meta').innerHTML =
+      `tested via ${p.label} (${modelLabel}): <a href="${url}" target="_blank">${url}</a> &mdash; ${now}`;
+
+    statusEl.style.display = 'none';
+    resultsEl.style.display = 'block';
+  } catch(e) {
+    statusEl.style.display = 'none';
+    showError('API error: ' + e.message);
   }
 
-  btn.disabled = false;
+  runBtn.disabled = false;
 }
 
-document.getElementById('contentUrl').addEventListener('keydown', e => { if (e.key === 'Enter') runCheck(); });
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') runCheck();
+});
 </script>
+
 </body>
 </html>
