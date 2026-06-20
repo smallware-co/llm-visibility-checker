@@ -540,13 +540,16 @@ function getPathWords(url) {
  * None = no traceable connection found.
  */
 function scoreSignal(responseText, url) {
-  const lower = responseText.toLowerCase();
-  const domain = getDomain(url).toLowerCase();
-  const urlLower = url.toLowerCase();
+  // Normalize: strip www. from response so www/non-www both match
+  const lower = responseText.toLowerCase().replace(/www\./g, '');
+  const domain = getDomain(url).toLowerCase(); // already strips www.
+  const urlLower = url.toLowerCase().replace(/www\./g, '');
   const siteName = domain.split('.')[0];
 
-  if (lower.includes(urlLower) || lower.includes(domain)) return 'strong';
+  // Strong: domain or full URL appears anywhere in response
+  if (lower.includes(domain) || lower.includes(urlLower)) return 'strong';
 
+  // Weak: path slug words or site name mentioned without direct URL
   const pathWords = getPathWords(url);
   const hasPathHit = pathWords.some(w => lower.includes(w.toLowerCase()));
   const hasSiteHit = siteName.length > 3 && lower.includes(siteName.toLowerCase());
